@@ -7,7 +7,8 @@ const client = new Client({
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent,
-        GatewayIntentBits.GuildMessageReactions  // Added intent to handle reactions
+        GatewayIntentBits.GuildMessageReactions,
+        GatewayIntentBits.GuildMembers // Ensure this is included
     ],
     partials: [Partials.Message, Partials.Channel, Partials.Reaction]
 });
@@ -27,18 +28,36 @@ client.once('ready', () => {
     console.log('TD-Bot is online!');
 });
 
+client.on('guildMemberAdd', async guildMember => {
+    console.log('A new member has joined:', guildMember.user.tag); // Log to confirm event triggers
+
+    console.log(guildMember.guild.roles.cache.map(role => role.name)); // Log all role names in the server
+    let welcomeRole = guildMember.guild.roles.cache.find(role => role.name === 'Patriots');
+
+    if (!welcomeRole) {
+        console.error('Role "Patriots" not found!');
+        return;
+    }
+
+    try {
+        await guildMember.roles.add(welcomeRole);
+        console.log(`Assigned role "Patriots" to ${guildMember.user.tag}`);
+    } catch (error) {
+        console.error(`Failed to assign role: ${error}`);
+    }
+});
+
 client.on('messageCreate', message => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
     const args = message.content.slice(prefix.length).split(/ +/);
     const commandName = args.shift().toLowerCase();
 
-    // Find the command and execute it
     const command = client.commands.get(commandName);
 
     if (command) {
         try {
-            command.execute(message, args, require('discord.js'), client);  // Passing `Discord` here
+            command.execute(message, args, require('discord.js'), client);
         } catch (error) {
             console.error(error);
             message.reply('There was an error executing that command!');
