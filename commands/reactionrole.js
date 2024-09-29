@@ -2,25 +2,36 @@ module.exports = {
     name: 'reactionrole',
     description: 'Sets up a reaction role message',
     async execute(message, args, Discord, client) {
-        const channelID = '1287870926200901642';  // Make sure this is your actual channel ID
+        const channelID = '1287870926200901642';
         const notifierTeamRole = message.guild.roles.cache.find(role => role.name === "Notifier");
         const playTesterTeamRole = message.guild.roles.cache.find(role => role.name === "PlayTester");
 
-        const notifierTeamEmoji = '🔔';  // Use actual emoji characters
+        const notifierTeamEmoji = '🔔';
         const playTesterTeamEmoji = '🎮';
+        
+        const splendeedStudioEmoji = '<:splendeed_studio:1286022162842390599>';
 
-        // Creating an embed
         const embed = new Discord.EmbedBuilder()
             .setColor('#F23838')
-            .setTitle('Role Selection')
-            .setDescription(`React to get a role:\n\n${notifierTeamEmoji} Notifier\n${playTesterTeamEmoji} PlayTester`);
+            .setDescription(`${splendeedStudioEmoji} @Splendeed Team 
+            Official employees of the studio \n\n
 
-        // Sending the embed
+            :shield: @Moderators 
+            Volunteer community managing the Discord to keep the peace.\n\n
+
+            :video_game: @PlayTester 
+            Helps test the game and provide feedback during playtest sessions.\n\n
+
+            :bell: @Notifier 
+            Stays updated on all major server and game news.\n\n
+
+            :flag_us: @Patriots 
+            All members of the community.`);
+
         let messageEmbed = await message.channel.send({ embeds: [embed] });
         messageEmbed.react(notifierTeamEmoji);
         messageEmbed.react(playTesterTeamEmoji);
 
-        // Event for adding a reaction
         client.on('messageReactionAdd', async (reaction, user) => {
             if (reaction.message.partial) await reaction.message.fetch();
             if (reaction.partial) await reaction.fetch();
@@ -43,7 +54,6 @@ module.exports = {
             }
         });
 
-        // Event for removing a reaction
         client.on('messageReactionRemove', async (reaction, user) => {
             if (reaction.message.partial) await reaction.message.fetch();
             if (reaction.partial) await reaction.fetch();

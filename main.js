@@ -2,14 +2,13 @@ const { Client, GatewayIntentBits, Partials, Collection } = require('discord.js'
 const fs = require('fs');
 require('dotenv').config();
 
-// Create the client and set intents
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.GuildMessageReactions,
-        GatewayIntentBits.GuildMembers // Ensure this is included
+        GatewayIntentBits.GuildMembers
     ],
     partials: [Partials.Message, Partials.Channel, Partials.Reaction]
 });
@@ -17,7 +16,6 @@ const client = new Client({
 const prefix = '-';
 client.commands = new Collection();
 
-// Read all command files from the `commands` folder
 const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
@@ -30,9 +28,9 @@ client.once('ready', () => {
 });
 
 client.on('guildMemberAdd', async guildMember => {
-    console.log('A new member has joined:', guildMember.user.tag); // Log to confirm event triggers
+    console.log('A new member has joined:', guildMember.user.tag);
 
-    console.log(guildMember.guild.roles.cache.map(role => role.name)); // Log all role names in the server
+    console.log(guildMember.guild.roles.cache.map(role => role.name));
     let welcomeRole = guildMember.guild.roles.cache.find(role => role.name === 'Patriots');
 
     if (!welcomeRole) {
@@ -48,7 +46,7 @@ client.on('guildMemberAdd', async guildMember => {
     }
 });
 
-client.on('messageCreate', message => {
+client.on('messageCreate', async message => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
     const args = message.content.slice(prefix.length).split(/ +/);
@@ -58,10 +56,12 @@ client.on('messageCreate', message => {
 
     if (command) {
         try {
-            command.execute(message, args, require('discord.js'), client);
+            await message.delete();
+
+            await command.execute(message, args, require('discord.js'), client);
         } catch (error) {
-            console.error(error);
-            message.reply('There was an error executing that command!');
+            console.error('Error executing the command:', error);
+            message.channel.send('There was an error executing that command!');
         }
     }
 });
