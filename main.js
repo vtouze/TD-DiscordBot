@@ -1,6 +1,11 @@
 const { Client, GatewayIntentBits, Partials, Collection } = require('discord.js');
 const fs = require('fs');
-require('dotenv').config();
+const dotenv = require("dotenv");
+
+if (process.env.NODE_ENV !== "production") {
+    dotenv.config();
+}
+
 
 const client = new Client({
     intents: [
