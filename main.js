@@ -6,7 +6,6 @@ if (process.env.NODE_ENV !== "production") {
     dotenv.config();
 }
 
-
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -58,9 +57,11 @@ client.on('messageCreate', async message => {
     const commandName = args.shift().toLowerCase();
 
     const command = client.commands.get(commandName);
-
+        
     if (command) {
         try {
+            console.log(`${message.author.displayName}: ${commandName}`);
+
             await message.delete();
 
             await command.execute(message, args, require('discord.js'), client);
