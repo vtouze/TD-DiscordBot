@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, Partials, Collection } = require('discord.js');
+const { Client, GatewayIntentBits, Partials, Collection, REST, Routes } = require('discord.js');
 const fs = require('fs');
 const dotenv = require("dotenv");
 
@@ -24,13 +24,32 @@ const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith(
 
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
-    client.commands.set(command.name, command);
+    client.commands.set(command.data ? command.data.name : command.name, command);
 }
 
 client.once('ready', async () => {
     console.log('TD-Bot is online!');
 
-    // If the reaction role message ID exists, fetch it and attach event listeners
+    const CLIENT_ID = client.user.id;
+    const GUILD_ID = '1280143606447083550';
+    const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
+
+    const commands = client.commands
+        .filter(command => command.data)
+        .map(command => command.data.toJSON());
+
+    (async () => {
+        try {
+            await rest.put(
+                Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID),
+                { body: commands }
+            );
+            console.log('Successfully registered application commands.');
+        } catch (error) {
+            console.error(error);
+        }
+    })();
+
     if (fs.existsSync('./reactionRoleMessageID.txt')) {
         const messageID = fs.readFileSync('./reactionRoleMessageID.txt', 'utf-8');
         const channelID = '1287870926200901642';
@@ -39,7 +58,6 @@ client.once('ready', async () => {
 
         console.log(`Fetched reaction role message with ID: ${messageID}`);
 
-        // Attach listeners for reactions (messageReactionAdd and messageReactionRemove)
         const notifierTeamRole = message.guild.roles.cache.find(role => role.name === "Notifier");
         const playTesterTeamRole = message.guild.roles.cache.find(role => role.name === "PlayTester");
 
@@ -121,7 +139,6 @@ client.on('messageCreate', async message => {
     if (command) {
         try {
             console.log(`${message.author.displayName}: ${commandName}`);
-
             await message.delete();
 
             await command.execute(message, args, require('discord.js'), client);
@@ -129,6 +146,21 @@ client.on('messageCreate', async message => {
             console.error('Error executing the command:', error);
             message.channel.send('There was an error executing that command!');
         }
+    }
+});
+
+client.on('interactionCreate', async interaction => {
+    if (!interaction.isCommand()) return;
+
+    const command = client.commands.get(interaction.commandName);
+
+    if (!command) return;
+
+    try {
+        await command.execute(interaction);
+    } catch (error) {
+        console.error(error);
+        await interaction.reply({ content: 'There was an error executing this command!', ephemeral: true });
     }
 });
 
