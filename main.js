@@ -27,14 +27,74 @@ for (const file of commandFiles) {
     client.commands.set(command.name, command);
 }
 
-client.once('ready', () => {
+client.once('ready', async () => {
     console.log('TD-Bot is online!');
+
+    // If the reaction role message ID exists, fetch it and attach event listeners
+    if (fs.existsSync('./reactionRoleMessageID.txt')) {
+        const messageID = fs.readFileSync('./reactionRoleMessageID.txt', 'utf-8');
+        const channelID = '1287870926200901642';
+        const channel = await client.channels.fetch(channelID);
+        const message = await channel.messages.fetch(messageID);
+
+        console.log(`Fetched reaction role message with ID: ${messageID}`);
+
+        // Attach listeners for reactions (messageReactionAdd and messageReactionRemove)
+        const notifierTeamRole = message.guild.roles.cache.find(role => role.name === "Notifier");
+        const playTesterTeamRole = message.guild.roles.cache.find(role => role.name === "PlayTester");
+
+        const notifierTeamEmoji = '🔔';
+        const playTesterTeamEmoji = '🎮';
+
+        client.on('messageReactionAdd', async (reaction, user) => {
+            if (reaction.message.partial) await reaction.message.fetch();
+            if (reaction.partial) await reaction.fetch();
+            if (user.bot) return;
+            if (!reaction.message.guild) return;
+
+            if (reaction.message.channel.id === channelID) {
+                if (reaction.emoji.name === notifierTeamEmoji) {
+                    const member = reaction.message.guild.members.cache.get(user.id);
+                    if (member) {
+                        await member.roles.add(notifierTeamRole);
+                    }
+                }
+                if (reaction.emoji.name === playTesterTeamEmoji) {
+                    const member = reaction.message.guild.members.cache.get(user.id);
+                    if (member) {
+                        await member.roles.add(playTesterTeamRole);
+                    }
+                }
+            }
+        });
+
+        client.on('messageReactionRemove', async (reaction, user) => {
+            if (reaction.message.partial) await reaction.message.fetch();
+            if (reaction.partial) await reaction.fetch();
+            if (user.bot) return;
+            if (!reaction.message.guild) return;
+
+            if (reaction.message.channel.id === channelID) {
+                if (reaction.emoji.name === notifierTeamEmoji) {
+                    const member = reaction.message.guild.members.cache.get(user.id);
+                    if (member) {
+                        await member.roles.remove(notifierTeamRole);
+                    }
+                }
+                if (reaction.emoji.name === playTesterTeamEmoji) {
+                    const member = reaction.message.guild.members.cache.get(user.id);
+                    if (member) {
+                        await member.roles.remove(playTesterTeamRole);
+                    }
+                }
+            }
+        });
+    }
 });
 
 client.on('guildMemberAdd', async guildMember => {
     console.log('A new member has joined:', guildMember.user.tag);
 
-    console.log(guildMember.guild.roles.cache.map(role => role.name));
     let welcomeRole = guildMember.guild.roles.cache.find(role => role.name === 'Patriots');
 
     if (!welcomeRole) {

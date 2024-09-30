@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 module.exports = {
     name: 'reactionrole',
     description: 'Sets up a reaction role message',
@@ -8,7 +10,6 @@ module.exports = {
 
         const notifierTeamEmoji = '🔔';
         const playTesterTeamEmoji = '🎮';
-        
         const splendeedStudioEmoji = '<:splendeed_studio:1286022162842390599>';
 
         const embed = new Discord.EmbedBuilder()
@@ -28,10 +29,15 @@ module.exports = {
             :flag_us: @Patriots 
             All members of the community.`);
 
+        // Send the message and react with emojis
         let messageEmbed = await message.channel.send({ embeds: [embed] });
         messageEmbed.react(notifierTeamEmoji);
         messageEmbed.react(playTesterTeamEmoji);
 
+        // Save the message ID for future reference
+        fs.writeFileSync('./reactionRoleMessageID.txt', messageEmbed.id, 'utf-8');
+
+        // Attach the reaction listeners immediately after sending the message
         client.on('messageReactionAdd', async (reaction, user) => {
             if (reaction.message.partial) await reaction.message.fetch();
             if (reaction.partial) await reaction.fetch();
@@ -39,13 +45,13 @@ module.exports = {
             if (!reaction.message.guild) return;
 
             if (reaction.message.channel.id === channelID) {
-                if (reaction.emoji.name === '🔔') {
+                if (reaction.emoji.name === notifierTeamEmoji) {
                     const member = reaction.message.guild.members.cache.get(user.id);
                     if (member) {
                         await member.roles.add(notifierTeamRole);
                     }
                 }
-                if (reaction.emoji.name === '🎮') {
+                if (reaction.emoji.name === playTesterTeamEmoji) {
                     const member = reaction.message.guild.members.cache.get(user.id);
                     if (member) {
                         await member.roles.add(playTesterTeamRole);
@@ -61,13 +67,13 @@ module.exports = {
             if (!reaction.message.guild) return;
 
             if (reaction.message.channel.id === channelID) {
-                if (reaction.emoji.name === '🔔') {
+                if (reaction.emoji.name === notifierTeamEmoji) {
                     const member = reaction.message.guild.members.cache.get(user.id);
                     if (member) {
                         await member.roles.remove(notifierTeamRole);
                     }
                 }
-                if (reaction.emoji.name === '🎮') {
+                if (reaction.emoji.name === playTesterTeamEmoji) {
                     const member = reaction.message.guild.members.cache.get(user.id);
                     if (member) {
                         await member.roles.remove(playTesterTeamRole);
