@@ -29,15 +29,12 @@ module.exports = {
             :flag_us: @Patriots 
             All members of the community.`);
 
-        // Send the message and react with emojis
         let messageEmbed = await message.channel.send({ embeds: [embed] });
         messageEmbed.react(notifierTeamEmoji);
         messageEmbed.react(playTesterTeamEmoji);
 
-        // Save the message ID for future reference
         fs.writeFileSync('./reactionRoleMessageID.txt', messageEmbed.id, 'utf-8');
 
-        // Attach the reaction listeners immediately after sending the message
         client.on('messageReactionAdd', async (reaction, user) => {
             if (reaction.message.partial) await reaction.message.fetch();
             if (reaction.partial) await reaction.fetch();

@@ -1,7 +1,10 @@
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
+
 module.exports = {
-    name: 'embed',
-    description: 'Embed!',
-    execute(message, args, Discord) {
+    data: new SlashCommandBuilder()
+        .setName('embed')
+        .setDescription('Sends an embed with information.'),
+    async execute(interaction) {
         const newEmbed = new Discord.EmbedBuilder()
             .setColor('#F23838')
             .setTitle('Website')
@@ -15,6 +18,6 @@ module.exports = {
             .setImage('https://i.kickstarter.com/assets/045/849/881/079ae91f6436ae818ce8e49d9430f395_original.png?origin=ugc&q=80&width=600&sig=VnCyRxFdFuX9uaO99xD6eq8IEk92yzgjVyHgCFn2H%2FE%3D')
             .setFooter({ text: 'AAAAAHHHHHHHHHHHH' });
 
-        message.channel.send({ embeds: [newEmbed] }); // Note: Embeds are sent as an array in v14
-    }
+        await interaction.reply({ embeds: [newEmbed] });
+    },
 };

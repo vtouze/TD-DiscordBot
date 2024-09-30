@@ -11,8 +11,8 @@ const { SlashCommandBuilder } = require('discord.js');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('languages')
-        .setDescription('Sends the supported languages link'),
+        .setDescription('Get a list of all the languages supported in TOMORROW\'S DAY!'),
     async execute(interaction) {
-        await interaction.reply('Here\'s the list of supported languages: https://example.com/languages');
+        await interaction.reply('The game will feature English voice-overs and text in both English and French 🇬🇧 🇫🇷.');
     }
 };

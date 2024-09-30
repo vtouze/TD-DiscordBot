@@ -1,9 +1,11 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
-    name: 'splendeed',
-    description: 'Sends the official social media links of Splendeed',
-    async execute(message, args) {
+    data: new SlashCommandBuilder()
+        .setName('splendeed')
+        .setDescription('Sends the official social media links of Splendeed'),
+    
+    async execute(interaction) {
         const embed = new EmbedBuilder()
             .setColor('#F23838')
             .setTitle('     Splendeed\'s Social Media     ')
@@ -15,6 +17,6 @@ module.exports = {
             [Splendeed Studio official website](https://leomargueritte.squarespace.com/tomorrows-day)\n`)
             .setFooter({ text: 'Follow Splendeed Studio on social media!' });
 
-        await message.channel.send({ embeds: [embed] });
+        await interaction.reply({ embeds: [embed] });
     }
 };
