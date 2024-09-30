@@ -31,7 +31,7 @@ client.once('ready', async () => {
     console.log('TD-Bot is online!');
 
     const CLIENT_ID = client.user.id;
-    const GUILD_ID = '1280143606447083550';
+    const GUILD_ID = process.env.GUILD_ID;
     const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 
     const commands = client.commands
@@ -52,7 +52,7 @@ client.once('ready', async () => {
 
     if (fs.existsSync('./reactionRoleMessageID.txt')) {
         const messageID = fs.readFileSync('./reactionRoleMessageID.txt', 'utf-8');
-        const channelID = '1287870926200901642';
+        const channelID = process.env.channelID;
         const channel = await client.channels.fetch(channelID);
         const message = await channel.messages.fetch(messageID);
 
@@ -71,16 +71,22 @@ client.once('ready', async () => {
             if (!reaction.message.guild) return;
 
             if (reaction.message.channel.id === channelID) {
+                const member = await reaction.message.guild.members.fetch(user.id);
+
                 if (reaction.emoji.name === notifierTeamEmoji) {
-                    const member = reaction.message.guild.members.cache.get(user.id);
-                    if (member) {
+                    try {
                         await member.roles.add(notifierTeamRole);
+                        console.log(`Added role "Notifier" to ${member.user.tag}`);
+                    } catch (error) {
+                        console.error(`Failed to add role "Notifier" to ${member.user.tag}: ${error}`);
                     }
                 }
                 if (reaction.emoji.name === playTesterTeamEmoji) {
-                    const member = reaction.message.guild.members.cache.get(user.id);
-                    if (member) {
+                    try {
                         await member.roles.add(playTesterTeamRole);
+                        console.log(`Added role "PlayTester" to ${member.user.tag}`);
+                    } catch (error) {
+                        console.error(`Failed to add role "PlayTester" to ${member.user.tag}: ${error}`);
                     }
                 }
             }
@@ -93,16 +99,22 @@ client.once('ready', async () => {
             if (!reaction.message.guild) return;
 
             if (reaction.message.channel.id === channelID) {
+                const member = await reaction.message.guild.members.fetch(user.id); // Fetch the member
+
                 if (reaction.emoji.name === notifierTeamEmoji) {
-                    const member = reaction.message.guild.members.cache.get(user.id);
-                    if (member) {
+                    try {
                         await member.roles.remove(notifierTeamRole);
+                        console.log(`Removed role "Notifier" from ${member.user.tag}`);
+                    } catch (error) {
+                        console.error(`Failed to remove role "Notifier" from ${member.user.tag}: ${error}`);
                     }
                 }
                 if (reaction.emoji.name === playTesterTeamEmoji) {
-                    const member = reaction.message.guild.members.cache.get(user.id);
-                    if (member) {
+                    try {
                         await member.roles.remove(playTesterTeamRole);
+                        console.log(`Removed role "PlayTester" from ${member.user.tag}`);
+                    } catch (error) {
+                        console.error(`Failed to remove role "PlayTester" from ${member.user.tag}: ${error}`);
                     }
                 }
             }

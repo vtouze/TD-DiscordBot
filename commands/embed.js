@@ -5,7 +5,7 @@ module.exports = {
         .setName('embed')
         .setDescription('Sends an embed with information.'),
     async execute(interaction) {
-        const newEmbed = new Discord.EmbedBuilder()
+        const newEmbed = new EmbedBuilder()
             .setColor('#F23838')
             .setTitle('Website')
             .setURL('https://www.leomargueritte.fr/splendeed')
