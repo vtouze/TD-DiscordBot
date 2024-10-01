@@ -143,6 +143,8 @@ client.on('guildMemberAdd', async guildMember => {
 client.on('messageCreate', async message => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
+    if (message.partial) await message.fetch(); // Fetch partial message if needed
+
     const args = message.content.slice(prefix.length).split(/ +/);
     const commandName = args.shift().toLowerCase();
 
@@ -151,7 +153,12 @@ client.on('messageCreate', async message => {
     if (command) {
         try {
             console.log(`${message.author.displayName}: ${commandName}`);
-            await message.delete();
+            
+            if (!message.deleted) {
+                await message.delete();
+            } else {
+                console.log("Message has already been deleted or is not accessible.");
+            }
 
             await command.execute(message, args, require('discord.js'), client);
         } catch (error) {
@@ -160,6 +167,7 @@ client.on('messageCreate', async message => {
         }
     }
 });
+
 
 client.on('interactionCreate', async interaction => {
     if (!interaction.isCommand()) return;
