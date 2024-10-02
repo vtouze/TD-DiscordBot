@@ -32,7 +32,7 @@ client.once('ready', async () => {
 
     const CLIENT_ID = client.user.id;
     const GUILD_ID = process.env.GUILD_ID;
-    const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
+    const rest = new REST({ version: '14' }).setToken(process.env.DISCORD_TOKEN);
 
     const commands = client.commands
         .filter(command => command.data)
@@ -99,7 +99,7 @@ client.once('ready', async () => {
             if (!reaction.message.guild) return;
 
             if (reaction.message.channel.id === channelID) {
-                const member = await reaction.message.guild.members.fetch(user.id); // Fetch the member
+                const member = await reaction.message.guild.members.fetch(user.id);
 
                 if (reaction.emoji.name === notifierTeamEmoji) {
                     try {
@@ -143,7 +143,7 @@ client.on('guildMemberAdd', async guildMember => {
 client.on('messageCreate', async message => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
-    if (message.partial) await message.fetch(); // Fetch partial message if needed
+    if (message.partial) await message.fetch();
 
     const args = message.content.slice(prefix.length).split(/ +/);
     const commandName = args.shift().toLowerCase();
