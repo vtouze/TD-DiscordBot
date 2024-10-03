@@ -14,6 +14,9 @@ module.exports = {
                 .setDescription('The reason for denying the suggestion')
                 .setRequired(true)
         ),
+
+    requiredRole: 'Splendeed Team',
+    
     async execute(interaction) {
         if (!interaction.member.permissions.has('ManageMessages')) {
             return interaction.reply({ content: 'You do not have permission to manage messages.', ephemeral: true });
@@ -45,7 +48,7 @@ module.exports = {
 
             const user = interaction.client.users.cache.find(u => u.tag === embedData.author.name);
             if (user) {
-                await user.send(`Your suggestion has been denied by a moderator.\nHere is your suggestion: "${suggestionQuery}"`);
+                await user.send(`Your suggestion has been denied by a moderator.`);
             }
 
             await interaction.reply({ content: 'Suggestion denied and user notified.', ephemeral: true });

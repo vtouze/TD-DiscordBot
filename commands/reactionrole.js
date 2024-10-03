@@ -3,6 +3,7 @@ const fs = require('fs');
 module.exports = {
     name: 'reactionrole',
     description: 'Sets up a reaction role message',
+    requiredRole: 'Splendeed Team',
     async execute(message, args, Discord, client) {
         const channelID = '1287870926200901642';
         const notifierTeamRole = message.guild.roles.cache.find(role => role.name === "Notifier");

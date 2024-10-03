@@ -34,8 +34,15 @@ client.once('ready', async () => {
     const GUILD_ID = process.env.GUILD_ID;
     const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 
+    const guild = await client.guilds.fetch(GUILD_ID);
+
     const commands = client.commands
         .filter(command => command.data)
+        .filter(command => {
+            const requiredRole = command.requiredRole;
+            if (!requiredRole) return true;
+            return guild.roles.cache.some(role => role.name === requiredRole);
+        })
         .map(command => command.data.toJSON());
 
     (async () => {
@@ -44,7 +51,7 @@ client.once('ready', async () => {
                 Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID),
                 { body: commands }
             );
-            console.log('Successfully registered application commands.');
+            console.log('Successfully registered application commands based on roles.');
         } catch (error) {
             console.error(error);
         }

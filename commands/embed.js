@@ -4,6 +4,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('embed')
         .setDescription('Sends an embed with information.'),
+    requiredRole: 'Splendeed Team',
     async execute(interaction) {
         const newEmbed = new EmbedBuilder()
             .setColor('#F23838')

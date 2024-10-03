@@ -1,14 +1,21 @@
-const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('splendeed')
         .setDescription('Sends the official social media links of Splendeed'),
-    
+
+    requiredRole: 'Patriots',
+
     async execute(interaction) {
+        const requiredRole = interaction.guild.roles.cache.find(role => role.name === 'Moderator');
+        if (!interaction.member.roles.cache.has(requiredRole.id)) {
+            return interaction.reply({ content: 'You do not have permission to use this command.', ephemeral: true });
+        }
+
         const embed = new EmbedBuilder()
             .setColor('#F23838')
-            .setTitle('     Splendeed\'s Social Media     ')
+            .setTitle('Splendeed\'s Social Media')
             .setDescription(`[YouTube](https://www.youtube.com/channel/UCMIsDg-X0EKKYk4sIjS-wyQ)\n
             [Twitter](https://twitter.com/splendeed_inc)\n
             [Instagram](https://www.instagram.com/splendeed.inc/?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw%3D%3D)\n
