@@ -8,7 +8,7 @@ module.exports = {
     requiredRole: 'Patriots',
 
     async execute(interaction) {
-        const requiredRole = interaction.guild.roles.cache.find(role => role.name === 'Moderator');
+        const requiredRole = interaction.guild.roles.cache.find(role => role.name === 'Patriots');
         if (!interaction.member.roles.cache.has(requiredRole.id)) {
             return interaction.reply({ content: 'You do not have permission to use this command.', ephemeral: true });
         }

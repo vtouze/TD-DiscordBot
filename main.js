@@ -183,6 +183,18 @@ client.on('interactionCreate', async interaction => {
 
     if (!command) return;
 
+    if (command.requiredRole) {
+        const member = await interaction.guild.members.fetch(interaction.user.id);
+        const hasRole = member.roles.cache.some(role => role.name === command.requiredRole);
+
+        if (!hasRole) {
+            return await interaction.reply({ 
+                content: `You need the "${command.requiredRole}" role to use this command.`, 
+                ephemeral: true 
+            });
+        }
+    }
+
     try {
         await command.execute(interaction);
     } catch (error) {
@@ -190,5 +202,6 @@ client.on('interactionCreate', async interaction => {
         await interaction.reply({ content: 'There was an error executing this command!', ephemeral: true });
     }
 });
+
 
 client.login(process.env.DISCORD_TOKEN);
