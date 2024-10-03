@@ -45,7 +45,7 @@ module.exports = {
 
             const user = interaction.client.users.cache.find(u => u.tag === embedData.author.name);
             if (user) {
-                await user.send('Your suggestion has been denied by a moderator.');
+                await user.send(`Your suggestion has been denied by a moderator.\nHere is your suggestion: "${suggestionQuery}"`);
             }
 
             await interaction.reply({ content: 'Suggestion denied and user notified.', ephemeral: true });

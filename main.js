@@ -32,7 +32,7 @@ client.once('ready', async () => {
 
     const CLIENT_ID = client.user.id;
     const GUILD_ID = process.env.GUILD_ID;
-    const rest = new REST({ version: '14' }).setToken(process.env.DISCORD_TOKEN);
+    const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 
     const commands = client.commands
         .filter(command => command.data)
