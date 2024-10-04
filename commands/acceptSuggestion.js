@@ -38,6 +38,8 @@ module.exports = {
                 return interaction.reply({ content: 'The suggestion message does not contain an embed.', ephemeral: true });
             }
 
+            const suggestionQuery = embedData.description.split('**Suggestion**: ')[1];
+            
             const acceptEmbed = new EmbedBuilder()
                 .setAuthor({ name: embedData.author.name, iconURL: embedData.author.iconURL })
                 .setDescription(embedData.description)
@@ -48,7 +50,7 @@ module.exports = {
 
             const user = interaction.client.users.cache.find(u => u.tag === embedData.author.name);
             if (user) {
-                await user.send(`Your suggestion has been accepted by a moderator!`);
+                await user.send(`Your suggestion has been accepted by a moderator!\n Suggest: ${suggestionQuery} \n Reason: ${acceptQuery}`);
             }
 
             await interaction.reply({ content: 'Suggestion accepted and user notified.', ephemeral: true });
