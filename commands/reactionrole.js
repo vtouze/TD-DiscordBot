@@ -14,7 +14,7 @@ module.exports = {
         const splendeedStudioEmoji = '<:splendeed_studio:1286022162842390599>';
 
         const embed = new Discord.EmbedBuilder()
-            .setColor('#F23838')
+            .setColor('#96170e')
             .setDescription(`${splendeedStudioEmoji} @Splendeed Team 
             Official employees of the studio \n\n
 

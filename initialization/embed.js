@@ -7,7 +7,7 @@ module.exports = {
     requiredRole: 'Splendeed Team',
     async execute(interaction) {
         const newEmbed = new EmbedBuilder()
-            .setColor('#F23838')
+            .setColor('#96170e')
             .setTitle('Website')
             .setURL('https://www.leomargueritte.fr/splendeed')
             .setDescription('Official website of Splendeed Studio')
