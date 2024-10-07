@@ -5,7 +5,7 @@ module.exports = {
     description: 'Sets up a reaction role message',
     requiredRole: 'Splendeed Team',
     async execute(message, args, Discord, client) {
-        const channelID = '1287870926200901642';
+        const channelID = process.env.channelID;
         const notifierTeamRole = message.guild.roles.cache.find(role => role.name === "Notifier");
         const playTesterTeamRole = message.guild.roles.cache.find(role => role.name === "PlayTester");
 

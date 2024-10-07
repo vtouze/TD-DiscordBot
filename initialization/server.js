@@ -32,8 +32,8 @@ module.exports = {
 
                 **:woman_raising_hand: Q&A**
 
-                **#❔question-suggestion** - your questions to the team for our Live Q&As.
-                **#❓question-voting** - the best questions are selected for answers during Live Q&A here.
+                **#❔question-suggestion** - share your thoughts, questions and suggestions with the development team!
+                **#❓question-status** - track the status of past suggestions and questions!
                 **#📋testing-instructions** - guidelines and steps for testing sessions.
                 **#📆qa-planning** - upcoming QA sessions and schedules.
 
